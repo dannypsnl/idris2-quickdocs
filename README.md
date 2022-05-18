@@ -10,9 +10,7 @@ A demo of this is hosted at [https://idris2docs.sinyax.net](https://idris2docs.s
 ## Requirements
 
 To generate the documentation index, you need Python 3,
-[poetry](https://python-poetry.org/) and the [`mkdoc` branch of my Idris2
-fork](https://github.com/cypheon/Idris2/tree/mkdoc) (at least until the doc
-generation is ready to be upstreamed).
+[poetry](https://python-poetry.org/) and a recent (>= 0.5.1) version of Idris 2.
 
 ## Usage
 

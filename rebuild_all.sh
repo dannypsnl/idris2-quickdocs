@@ -5,8 +5,8 @@ set -u
 set -o pipefail
 set -x
 
-src_root=${IDRIS2_SRC:-$PWD/../mkdocs}
-idris2=${IDRIS2_EXECUTABLE:-$src_root/build/exec/idris2}
+src_root=${IDRIS2_SRC:-$PWD/../Idris2-SH}
+idris2=${IDRIS2_EXECUTABLE:-idris2}
 
 build_doc() {
   pkg="$1"
@@ -29,5 +29,3 @@ done
 
 poetry run ./mkindex.py data
 poetry run ./mkhome.py data
-
-chmod -R ugo+rX data
