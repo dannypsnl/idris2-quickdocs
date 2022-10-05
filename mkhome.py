@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+from subprocess import check_output
 import sys
 
 from jinja2 import Template
@@ -13,6 +14,11 @@ HTML_TRAILER = '''</article></body></html>'''
 
 def main():
     root = Path(sys.argv[1])
+    idris_src_root = Path(sys.argv[2])
+
+    idris_src_version = check_output(["git", "describe", "--tags"], cwd=idris_src_root, encoding='utf-8').strip()
+    idris_commit_id = check_output(["git", "rev-list", "--max-count=1", "HEAD"], cwd=idris_src_root, encoding='utf-8').strip()
+
     with open('templates/home.md.j2') as f:
         tpl = Template(f.read())
 
@@ -28,6 +34,8 @@ def main():
     context = {
         'packages': packages,
         'downloads': downloads,
+        'idris_src_version': idris_src_version,
+        'idris_commit_id': idris_commit_id,
     }
 
     with open(root / 'home.html', 'w') as f:

@@ -5,7 +5,7 @@ set -u
 set -o pipefail
 set -x
 
-src_root=${IDRIS2_SRC:-$PWD/../Idris2-SH}
+src_root=${IDRIS2_SRC:-$PWD/../Idris2-vanilla}
 idris2=${IDRIS2_EXECUTABLE:-idris2}
 
 build_doc() {
@@ -28,4 +28,7 @@ for pkg in base contrib network prelude test; do
 done
 
 poetry run ./mkindex.py data
-poetry run ./mkhome.py data
+poetry run ./mkhome.py data "$src_root"
+
+echo "Docs build complete, documented Idris2 version:"
+(cd "$src_root" && git describe --tags)
