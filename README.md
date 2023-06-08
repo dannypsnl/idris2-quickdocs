@@ -1,5 +1,7 @@
 # Idris2 Quickdocs
 
+From https://git.sr.ht/~cypheon/idris2-quickdocs
+
 This is an index generator and fast documentation browser for
 [Idris2](https://github.com/idris-lang/Idris2).
 
