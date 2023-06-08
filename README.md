@@ -1,13 +1,12 @@
 # Idris2 Quickdocs
 
-From https://git.sr.ht/~cypheon/idris2-quickdocs
+From https://git.sr.ht/~cypheon/idris2-quickdocs, build for latest idris2
+
+View on https://dannypsnl.github.io/idris2-quickdocs/
 
 This is an index generator and fast documentation browser for
 [Idris2](https://github.com/idris-lang/Idris2).
 
-## Live Demo
-
-A demo of this is hosted at [https://idris2docs.sinyax.net](https://idris2docs.sinyax.net)
 
 ## Requirements
 
