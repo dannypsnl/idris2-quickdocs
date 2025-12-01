@@ -12,10 +12,10 @@ jobs:
         uses: actions/checkout@master
 
       - name: "Install Chez Scheme"
-        run: apt-get update && apt-get install chezscheme && apt-get clean
+        run: sudo apt-get update && sudo apt-get install chezscheme && sudo apt-get clean
 
       - name: "Install Build-Essentials, Coreutils and GMP"
-        run: apt-get update && apt-get install build-essential coreutils libgmp-dev
+        run: sudo apt-get update && sudo apt-get install build-essential coreutils libgmp-dev
 
       - name: "Install Pack"
         run: printf "\n" | bash -c "$(curl -fsSL https://raw.githubusercontent.com/stefan-hoeck/idris2-pack/main/install.bash)"
