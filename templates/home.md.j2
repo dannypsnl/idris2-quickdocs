@@ -13,7 +13,13 @@ find `Control.Monad.State.runState`
 {% for pkg in packages %} * [{{ pkg }}]({{ pkg }}/index.html)
 {% endfor %}
 
-The version of the documented source code is: <a href="https://github.com/idris-lang/Idris2/tree/{{ idris_commit_id }}" target="_blank">{{ idris_src_version }}</a>
+### Downloads
+
+Each `tar.gz` contains self-contained HTML for offline viewing (but without
+"quick search" capability):
+
+{% for dl in downloads %} * [{{ dl }}]({{ dl }})
+{% endfor %}
 
 ### Source Code
 

@@ -1,0 +1,43 @@
+name: GitHub Actions Demo
+run-name: Publish to Github Pages 🚀
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Check out code"
+        uses: actions/checkout@master
+
+      - name: "Install Chez Scheme"
+        run: apt-get update && apt-get install chezscheme && apt-get clean
+
+      - name: "Install Build-Essentials, Coreutils and GMP"
+        run: apt-get update && apt-get install build-essential coreutils libgmp-dev
+
+      - name: "Install Pack"
+        run: printf "\n" | bash -c "$(curl -fsSL https://raw.githubusercontent.com/stefan-hoeck/idris2-pack/main/install.bash)"
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: "Build website"
+        run: "$GITHUB_WORKSPACE/rebuild_all.sh"
+
+      - name: "Upload build artifact"
+        id: up-artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.up-artifact.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

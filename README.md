@@ -11,14 +11,14 @@ This is an index generator and fast documentation browser for
 ## Requirements
 
 To generate the documentation index, you need Python 3,
-[poetry](https://python-poetry.org/) and a recent (>= 0.5.1) version of Idris 2.
+[uv](https://docs.astral.sh/uv/) and a recent (>= 0.5.1) version of Idris 2.
 
 ## Usage
 
 Updating and serving the docs is a bit rought for now, but all the pieces are
 available.
 
-Run `poetry install` to install dependencies, then you can run the following:
+Run `uv pip install` to install dependencies, then you can run the following:
 
 ```sh
 IDRIS2_EXECUTABLE=path/to/idris2 IDRIS2_SRC=path/to/idris2/source/code ./rebuild_all.sh

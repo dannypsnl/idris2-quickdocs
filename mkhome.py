@@ -24,9 +24,12 @@ def main():
         link = pkg.relative_to(root)
         pkg = link.parts[-2]
         packages.append(pkg)
+        dlfilename = pkg + '-idris2docs.tar.gz'
+        downloads.append(dlfilename)
 
     context = {
-        'packages': packages
+        'packages': packages,
+        'downloads': downloads
     }
 
     with open(root / 'home.html', 'w') as f:
