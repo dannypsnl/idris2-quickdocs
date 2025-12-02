@@ -7,19 +7,18 @@ set -x
 
 idris2=${IDRIS2_EXECUTABLE:-idris2}
 src_root=${IDRIS2_SRC:-$($idris2 --libdir)}
+pack=${PACK_EXECUTABLE:-pack}
 
 
 build_doc() {
   pkg="$1"
-  declare TMP="$(mktemp -d)"
   mkdir -p "build/$pkg"
-  (
-    cd "${src_root}/$pkg-"*
-    "$idris2" --mkdoc --build-dir "$TMP"
-  )
-  mv "$TMP/docs/"* "build/$pkg"
+  $pack --with-docs install "$pkg"
+  mv "$src_root/$pkg-"*"/docs/"* "build/$pkg"
   ( cd build && tar czf "${pkg}-idris2docs.tar.gz" "$pkg")
 }
+
+rm -rf build
 
 for pkg in base contrib network prelude test; do
   build_doc "$pkg"
