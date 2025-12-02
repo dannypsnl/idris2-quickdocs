@@ -2,8 +2,17 @@ name: Update Github Pages
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
