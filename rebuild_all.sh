@@ -27,5 +27,6 @@ done
 
 uv run ./mkindex.py build
 uv run ./mkhome.py build
+cp -r app.js index.html style.css build
 
 echo "Docs build complete!"
