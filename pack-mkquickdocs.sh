@@ -41,7 +41,7 @@ copyPackageDocs() {
     declare DOCS="$1"
     declare OUTDIR_INNER="$2"
     declare PACKAGENAME_INNER="$3"
-    cp -av "$DOCS" "$OUTDIR_INNER/data/$PACKAGENAME_INNER";
+    cp -arv "$DOCS" "$OUTDIR_INNER/data/$PACKAGENAME_INNER";
     ( cd "$OUTDIR_INNER/data" && tar czf "$PACKAGENAME_INNER-idris2docs.tar.gz" "$PACKAGENAME_INNER")
 }
 
