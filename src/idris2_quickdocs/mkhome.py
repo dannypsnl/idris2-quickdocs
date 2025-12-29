@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 from pathlib import Path
+from importlib import resources
 from subprocess import check_output
 import sys
 
@@ -12,10 +13,13 @@ HTML_HEADER = ''' <!DOCTYPE html>
 '''
 HTML_TRAILER = '''</article></body></html>'''
 
+
+
 def main():
     root = Path(sys.argv[1])
 
-    with open('templates/home.md.j2') as f:
+    template_path = resources.files('idris2_quickdocs').joinpath('templates', 'home.md.j2')
+    with template_path.open(encoding="utf-8") as f:
         tpl = Template(f.read())
 
     packages = []

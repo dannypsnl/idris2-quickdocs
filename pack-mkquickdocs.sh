@@ -59,9 +59,10 @@ done
 
 (
     cd $BUILDERDIR;
-    uv run ./mkindex.py "$OUTDIR/data"
-    uv run ./mkhome.py "$OUTDIR/data"
-    cp -r app.js index.html style.css $OUTDIR
+    export PYTHONPATH=./src
+    uv run python -m idris2_quickdocs.mkindex "$OUTDIR/data"
+    uv run python -m idris2_quickdocs.mkhome "$OUTDIR/data"
+    uv run python -m idris2_quickdocs.copystattic "$OUTDIR"
 )
 
 (

@@ -1,3 +1,4 @@
+
 [project]
 name = "idris2-quickdocs"
 version = "0.1.0"
@@ -11,3 +12,10 @@ dependencies = [
     "markupsafe>=3.0.3",
 ]
 
+[project.scripts]
+quickdocs-mkhome     = "idris2_quickdocs.mkhome:main"
+quickdocs-mkindex    = "idris2_quickdocs.mkindex:main"
+quickdocs-copystatic = "idris2_quickdocs.copystatic:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

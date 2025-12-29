@@ -74,7 +74,10 @@ class IndexBuilder:
             ))
         self.entries += entries
 
-if __name__ == '__main__':
+def main():
     import sys
     builder = IndexBuilder(sys.argv[1])
     builder.run()
+
+if __name__ == '__main__':
+    main()
