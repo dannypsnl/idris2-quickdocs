@@ -7,14 +7,14 @@ declare OUTDIR="$1"
 shift;
 mkdir -p "$OUTDIR/data"
 
-
-for p in "$@"; do
-  declare packageName="$(basename "$p/share/doc/"*)";
-  declare DOCS="$p/share/doc/"
+while [[ -n "$1" ]]; do
+  declare packageName="$1";
+  declare docPath="$2";
+  shift; shift;
   declare packageNoVersion="$(sed -E 's/^(.*)-[^-]*$/\1/' <<< "$packageName")";
   mkdir -p "$OUTDIR/data/$packageNoVersion";
-  cp -r "$DOCS/$packageName/"* "$OUTDIR/data/$packageNoVersion";
-  (cd "$DOCS"; tar czf "$OUTDIR/data/$packageNoVersion-idris2docs.tar.gz" "$packageName";);
+  cp -r "$docPath/"* "$OUTDIR/data/$packageNoVersion";
+  (cd "$docPath"; tar --transform="s,^,$packageNoVersion/," -czf "$OUTDIR/data/$packageNoVersion-idris2docs.tar.gz" *;);
 done
 
 quickdocs-mkindex    "$OUTDIR/data"

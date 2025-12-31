@@ -1,5 +1,5 @@
 {
-  description = "hello world application using uv2nix";
+  description = "Idris2-Quickdocs, A searchable idris2 documentation generator";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -94,22 +94,45 @@
         default = pythonSets.${system}.mkVirtualEnv "idris2-quickdocs-env" workspace.deps.default; 
       });
 
-      quickdocs = forAllSystems (system: {name, deps}:
+      quickdocs = forAllSystems (system: {name, deps, builtinPackages ? [ "base" "prelude" ] }:
         let 
           pkgs = import nixpkgs { inherit system; };
+          builtinPackageDocs = name: (
+              pkgs.idris2.unwrapped.overrideAttrs (old: {
+                inherit name;
+                nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.idris2 ];
+                phases = [ "unpackPhase" "configurePhase" "patchPhase" "buildPhase" "installPhase" ];
+                outputs = [ "out" ];
+                checkPhase = "";
+                buildPhase =
+                  ''
+                  cd libs/${name};
+                  idris2 --mkdoc '${name}.ipkg';
+                  '';
+                installPhase =
+                  ''
+                  mkdir -p "$out";
+                  cp -r "build/docs/"* "$out";
+                  '';
+              }
+            )
+          );
           withDocs = dep:
             (dep.overrideAttrs {
-              outputs = [ "out" "doc" ];
-              postInstall = 
+              phases = [ "unpackPhase" "patchPhase" "buildPhase" "installPhase" ];
+              outputs = [ "out" ];
+              buildPhase = 
                 ''
-                declare docsTemp="$(mktemp -d)";
-                printf "%s\n" *.ipkg | xargs -I{} idris2 --mkdoc {} --build-dir "$docsTemp";
-                mkdir -p "$doc/share/doc/$name";
-                cp -r "$docsTemp/docs/"* "$doc/share/doc/$name";
+                printf "%s\n" *.ipkg | xargs -I{} idris2 --mkdoc {};
+                '';
+              installPhase =
+                ''
+                mkdir -p "$out";
+                cp -r "build/docs/"* "$out";
                 '';
             });
-          deps' = builtins.map withDocs deps;
-          depsDocs = builtins.map (x: x.doc) deps';
+          deps' = (builtins.map builtinPackageDocs builtinPackages) ++ (builtins.map withDocs deps); 
+          depsDocs = builtins.map (x: "'${x.name}' '${x.out}'") deps';
           depsDocs' = builtins.concatStringsSep " " depsDocs;
           builtDocs = (
             pkgs.stdenv.mkDerivation {
@@ -118,17 +141,34 @@
               outputHashAlgo = "sha256";
               builder = pkgs.writeScript "builder.sh" ''
                 export PATH=$PATH:${pythonSets.${system}.mkVirtualEnv "idris2-quickdocs-${name}-serve-env" workspace.deps.default}/bin;
-                ${./build_nix.sh} $out ${depsDocs'};
+                ${./build_quickdocs_nix.sh} $out ${depsDocs'};
               '';
             }
           );
         in
           pkgs.writeScriptBin "serve-quickdocs"
             ''
-              cd '${builtDocs}';
-              declare PORT="''${1:-8080}";
-              printf "Hosting server at port %s\n" "$PORT";
-              ${pkgs.python3}/bin/python3 -m http.server "$PORT";
+            case $1 in
+              "help" | "-h" | "--help" )
+                printf "%s\n" \
+                  "Usage: serve-quickdocs [<port> | dir | help | --help | -h]"            \
+                  "---"                                                                   \
+                  "help | -h | --help: Prints this help message"                          \
+                  "dir: Prints the directory where the built documentation is located"    \
+                  "<port>: Specifies the port the server will serve the documentation at" \
+                  "---"                                                                   \
+                  "If the argument is not specified, will host the documentation at port 8080";
+                exit;
+                ;;
+              "dir" )
+                printf "%s\n" '${builtDocs}';
+                exit;
+                ;;
+              * )
+                cd ${builtDocs};
+                ${pkgs.python3}/bin/python3 -m http.server "''${1:-8080}";
+                ;;
+            esac
             ''
       );
     };
