@@ -27,8 +27,10 @@ for pkg in base contrib network prelude test; do
   build_doc "$pkg"
 done
 
-uv run ./mkindex.py build/data
-uv run ./mkhome.py build/data
-cp -r app.js index.html style.css build
+export PYTHONPATH=./src
+
+uv run python -m idris2_quickdocs.mkindex    build/data
+uv run python -m idris2_quickdocs.mkhome     build/data
+uv run python -m idris2_quickdocs.copystatic build
 
 echo "Docs build complete!"
